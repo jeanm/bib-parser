@@ -1,0 +1,7 @@
+[package]
+name = "bib-parser"
+version = "0.1.0"
+authors = ["Jean Maillard <jean@maillard.it>"]
+
+[dependencies]
+pom = { git = "https://github.com/jeanm/pom.git" }
