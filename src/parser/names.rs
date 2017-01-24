@@ -1,6 +1,6 @@
 use pom::Parser;
 use pom::parser::*;
-use parser::{literal, sp0, sp1};
+use parser::{literal, sp0, sp1, msp0, msp1};
 use biblatex::{Name, NameList};
 
 // space-or-comma-delimited name token
@@ -13,7 +13,7 @@ fn name_token() -> Parser<u8, String> {
 // comma-delimited name part
 fn name_part() -> Parser<u8, String> {
     // TODO fix this ugly lookahead hack
-    let tokens = list(name_token(), sp1() - !(seq(b"and ") | seq(b"}")));
+    let tokens = list(name_token(), sp1() - !((seq(b"and") - msp1())| seq(b"}")));
     tokens.map(|ss| ss.join(" "))
 }
 
@@ -25,8 +25,8 @@ fn name() -> Parser<u8, Name> {
 
 /// List of names, used in fields such as `author` and `editor`.
 pub fn name_list() -> Parser<u8, NameList> {
-    let names = list(name(), sp1() * seq(b"and") - sp1());
-    let delimited = sym(b'{') * sp0() * names - sp0() - sym(b'}');
+    let names = list(name(), msp1() * seq(b"and") - msp1());
+    let delimited = sym(b'{') * msp0() * names - msp0() - sym(b'}');
     delimited.map(|ns| NameList::from_names(ns))
 }
 
@@ -70,7 +70,10 @@ mod test {
         let mut data1 = DataInput::new(b"{'t Hooft, Gerard and Celentano, A. Driano}");
         assert_eq!(name_list().parse(&mut data1), Ok(expected.clone()));
 
-        let mut data2 = DataInput::new(b"{'t Hooft, Gerard and Celentano, A. Driano }");
-        assert_eq!(name_list().parse(&mut data2), Ok(expected));
+        let mut data2 = DataInput::new(b"{'t Hooft, Gerard and\n Celentano, A. Driano }");
+        assert_eq!(name_list().parse(&mut data2), Ok(expected.clone()));
+
+        let mut data3 = DataInput::new(b"{'t Hooft, Gerard\n and Celentano, A. Driano }");
+        assert_eq!(name_list().parse(&mut data3), Ok(expected));
     }
 }

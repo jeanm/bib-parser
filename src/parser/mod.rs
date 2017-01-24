@@ -17,14 +17,19 @@ fn sp0() -> Parser<u8, ()> {
     is_a(space).repeat(0..).discard()
 }
 
+// spacing (one or more)
+fn sp1() -> Parser<u8, ()> {
+    is_a(space).repeat(1..).discard()
+}
+
 // spacing+newlines (zero or more)
 fn msp0() -> Parser<u8, ()> {
     is_a(multispace).repeat(0..).discard()
 }
 
-// spacing (one or more)
-fn sp1() -> Parser<u8, ()> {
-    is_a(space).repeat(1..).discard()
+// spacing+newlines (zero or more)
+fn msp1() -> Parser<u8, ()> {
+    is_a(multispace).repeat(1..).discard()
 }
 
 // match a braced literal expression, return its contents
