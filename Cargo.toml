@@ -4,4 +4,4 @@ version = "0.1.0"
 authors = ["Jean Maillard <jean@maillard.it>"]
 
 [dependencies]
-pom = { git = "https://github.com/jeanm/pom.git" }
+pom = { git = "https://github.com/J-F-Liu/pom.git" }
