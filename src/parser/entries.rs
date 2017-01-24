@@ -6,9 +6,9 @@ use pom::char_class::alphanum;
 use parser::{sp0, msp0, field};
 use biblatex::{Entry, Field};
 
-// recognises chars that can make up a citation key: a-zA-Z0-9_/-
+// recognises chars that can make up a citation key: a-zA-Z0-9_/:-
 fn cite_key_char(c: u8) -> bool {
-    alphanum(c) || c == b'_' || c == b'/' || c == b'-'
+    alphanum(c) || c == b'_' || c == b'/' || c == b'-' || c == b':'
 }
 
 #[derive(Debug)]
